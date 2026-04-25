@@ -1,35 +1,40 @@
-# Игнорируем папки bin и obj
+# Папки сборки
 bin/
 obj/
-.vs
+publish/
 
-# Игнорируем файлы настроек среды разработки
+# Visual Studio
+.vs/
+.vscode/
+.idea/
+
+# Файлы пользователя
 *.csproj.user
 *.suo
-*.vscode/
-*.idea/
+*.userprefs
+*.user
 
-# Игнорируем временные файлы и резервные копии
+# Временные файлы
 *.tmp
 *.bak
 *.log
+*.cache
 
-# Игнорируем файлы сборки
+# Файлы сборки
 *.dll
 *.exe
 *.pdb
+*.exe.config
 
-# Игнорируем все, что связано с пользовательскими настройками
-*.userprefs
-
-# Игнорируем профили публикации (важно добавить!)
+# Профили публикации
 Properties/PublishProfiles/
 **/Properties/PublishProfiles/
-
-# Игнорируем папку publish (если вы публикуете локально)
-publish/
-**/publish/
-
-# Игнорируем файлы конфигурации публикации (дополнительная страховка)
 *.pubxml
 *.pubxml.user
+
+# Rider
+.idea/
+*.sln.iml
+
+# Если BinBuddy.slnx - временный файл
+*.slnx
