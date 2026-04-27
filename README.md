@@ -2,8 +2,8 @@
 
 ## Скриншоты 
 
-<img width="202" height="148" alt="image" src="https://github.com/user-attachments/assets/085e4b56-cd56-4c77-adc6-88571b24472a" />
-<img width="478" height="165" alt="image" src="https://github.com/user-attachments/assets/a7ae64cd-374e-4abb-b828-dcb42ab6d3de" />
+<img width="206" height="154" alt="image" src="https://github.com/user-attachments/assets/c59b6ad1-53b9-4d94-8589-fcc071e338b0" />
+<img width="480" height="189" alt="image" src="https://github.com/user-attachments/assets/0e3e0fc1-cd53-4ff0-a764-82fceaf82ce1" />
 
 ## Информация
 
