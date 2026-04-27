@@ -7,21 +7,8 @@ namespace BinBuddy.src.BinBuddy
         private const string VersionUrl = "https://raw.githubusercontent.com/zhivem/BinBuddy/main/version.txt";
         private const string ReleasesUrl = "https://github.com/zhivem/BinBuddy/releases";
 
-        private static readonly HttpClient _httpClient = new HttpClient();
+        private static readonly HttpClient _httpClient = new();
         private static string? _latestVersion;
-
-        public static async Task<string?> GetLatestVersionAsync()
-        {
-            try
-            {
-                var response = await _httpClient.GetStringAsync(VersionUrl);
-                return response.Trim();
-            }
-            catch
-            {
-                return null;
-            }
-        }
 
         public static async Task<bool> IsUpdateAvailableAsync()
         {
@@ -48,9 +35,20 @@ namespace BinBuddy.src.BinBuddy
             {
                 Process.Start(new ProcessStartInfo(ReleasesUrl) { UseShellExecute = true });
             }
+            catch { }
+        }
+
+        public static string? GetLatestVersion() => _latestVersion;
+
+        private static async Task<string?> GetLatestVersionAsync()
+        {
+            try
+            {
+                return (await _httpClient.GetStringAsync(VersionUrl)).Trim();
+            }
             catch
             {
-                // Если не удалось открыть браузер
+                return null;
             }
         }
 
@@ -75,11 +73,6 @@ namespace BinBuddy.src.BinBuddy
             }
 
             return 0;
-        }
-
-        public static string? GetLatestVersion()
-        {
-            return _latestVersion;
         }
     }
 }

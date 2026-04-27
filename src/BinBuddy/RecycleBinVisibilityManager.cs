@@ -11,38 +11,22 @@ namespace BinBuddy.src.BinBuddy
         private const uint SHCNE_ASSOCCHANGED = 0x08000000;
         private const uint SHCNF_FLUSH = 0x1000;
 
-        public static bool IsRecycleBinVisibleOnDesktop()
+        public static bool IsRecycleBinVisible() => Registry.GetValue(DesktopKey, RecycleBinValue, 0) is 0;
+
+        public static void SetRecycleBinVisibility(bool isVisible)
         {
-            object? value = Registry.GetValue(DesktopKey, RecycleBinValue, 0);
-            return Convert.ToInt32(value) == 0;
+            Registry.SetValue(DesktopKey, RecycleBinValue, isVisible ? 0 : 1, RegistryValueKind.DWord);
+            RefreshDesktop();
         }
 
-        public static void SetRecycleBinVisibilityOnDesktop(bool isVisible)
-        {
-            int value = isVisible ? 0 : 1;
-            Registry.SetValue(DesktopKey, RecycleBinValue, value, RegistryValueKind.DWord);
-            RefreshDesktopIcons();
-        }
+        public static void ShowRecycleBin() => SetRecycleBinVisibility(true);
+        public static void HideRecycleBin() => SetRecycleBinVisibility(false);
+        public static void ToggleRecycleBin() => SetRecycleBinVisibility(!IsRecycleBinVisible());
+        public static string GetVisibilityStatus() => IsRecycleBinVisible() ? "Видна" : "Скрыта";
 
-        public static void ShowRecycleBin() => SetRecycleBinVisibilityOnDesktop(true);
-        public static void HideRecycleBin() => SetRecycleBinVisibilityOnDesktop(false);
+        private static void RefreshDesktop() => SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_FLUSH, IntPtr.Zero, IntPtr.Zero);
 
-        public static void ToggleRecycleBinVisibility()
-        {
-            SetRecycleBinVisibilityOnDesktop(!IsRecycleBinVisibleOnDesktop());
-        }
-
-        public static string GetVisibilityStatus()
-        {
-            return IsRecycleBinVisibleOnDesktop() ? "Видна" : "Скрыта";
-        }
-
-        private static void RefreshDesktopIcons()
-        {
-            SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_FLUSH, IntPtr.Zero, IntPtr.Zero);
-        }
-
-        [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
+        [DllImport("shell32.dll")]
         private static extern void SHChangeNotify(uint wEventId, uint uFlags, IntPtr dwItem1, IntPtr dwItem2);
     }
 }

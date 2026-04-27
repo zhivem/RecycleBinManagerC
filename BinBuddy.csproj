@@ -28,7 +28,7 @@
 		<NoWarn>$(NoWarn);IL2026;IL2057;IL2072;IL2075</NoWarn>
 		<SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
 		<ApplicationIcon>src\BinBuddy\app.ico</ApplicationIcon>
-		<Version>1.3</Version>
+		<Version>1.4</Version>
 		<AssemblyName>BinBuddy</AssemblyName>
 	</PropertyGroup>
 
@@ -41,18 +41,14 @@
 		<ItemGroup>
 			<IconFiles Include="resources\icons\**\*.ico" />
 		</ItemGroup>
-		<Copy SourceFiles="@(IconFiles)"
-              DestinationFiles="@(IconFiles->'$(OutputPath)icons\%(RecursiveDir)%(Filename)%(Extension)')"
-              SkipUnchangedFiles="true" />
+		<Copy SourceFiles="@(IconFiles)" DestinationFiles="@(IconFiles->'$(OutputPath)icons\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
 	</Target>
 
 	<Target Name="CopyIconsToPublish" BeforeTargets="Publish">
 		<ItemGroup>
 			<IconFiles Include="resources\icons\**\*.ico" />
 		</ItemGroup>
-		<Copy SourceFiles="@(IconFiles)"
-              DestinationFiles="@(IconFiles->'$(PublishDir)icons\%(RecursiveDir)%(Filename)%(Extension)')"
-              SkipUnchangedFiles="true" />
+		<Copy SourceFiles="@(IconFiles)" DestinationFiles="@(IconFiles->'$(PublishDir)icons\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
 	</Target>
 
 	<ItemGroup>

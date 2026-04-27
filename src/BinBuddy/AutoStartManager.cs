@@ -9,35 +9,37 @@ namespace BinBuddy.src.BinBuddy
 
         private static readonly string AppPath = Application.ExecutablePath;
 
-        public static bool IsAutoStartEnabled()
-        {
-            using var key = Registry.CurrentUser.OpenSubKey(RegistryPath, false);
-            return string.Equals(key?.GetValue(AppName) as string, AppPath, StringComparison.OrdinalIgnoreCase);
-        }
+        public static bool IsEnabled() => GetRegistryValue()?.Equals(AppPath, StringComparison.OrdinalIgnoreCase) == true;
 
-        public static void EnableAutoStart()
+        public static void Enable()
         {
-            using var key = Registry.CurrentUser.OpenSubKey(RegistryPath, true);
+            using var key = GetRegistryKey(true);
             key?.SetValue(AppName, AppPath, RegistryValueKind.String);
         }
 
-        public static void DisableAutoStart()
+        public static void Disable()
         {
-            using var key = Registry.CurrentUser.OpenSubKey(RegistryPath, true);
+            using var key = GetRegistryKey(true);
             key?.DeleteValue(AppName, false);
         }
 
-        public static void ToggleAutoStart()
+        public static void Toggle()
         {
-            if (IsAutoStartEnabled())
-                DisableAutoStart();
+            if (IsEnabled())
+                Disable();
             else
-                EnableAutoStart();
+                Enable();
         }
 
-        public static string GetAutoStartStatus()
+        public static string GetStatus() => IsEnabled() ? "Включен" : "Отключен";
+
+        private static string? GetRegistryValue()
         {
-            return IsAutoStartEnabled() ? "Включен" : "Отключен";
+            using var key = GetRegistryKey(false);
+            return key?.GetValue(AppName) as string;
         }
+
+        private static RegistryKey? GetRegistryKey(bool writable) =>
+            Registry.CurrentUser.OpenSubKey(RegistryPath, writable);
     }
 }

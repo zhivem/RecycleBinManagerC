@@ -18,7 +18,7 @@ namespace BinBuddy.src.BinBuddy
         };
 
         private static AppSettings? _cachedSettings;
-        private static readonly object _lock = new();
+        private static readonly Lock _lock = new();
 
         public static AppSettings LoadSettings()
         {
@@ -31,21 +31,20 @@ namespace BinBuddy.src.BinBuddy
                 {
                     if (!File.Exists(SettingsFilePath))
                     {
-                        var defaultSettings = new AppSettings();
-                        SaveSettings(defaultSettings);
-                        _cachedSettings = defaultSettings;
-                        return defaultSettings;
+                        _cachedSettings = new AppSettings();
+                        SaveSettings(_cachedSettings);
+                        return _cachedSettings;
                     }
 
                     var json = File.ReadAllText(SettingsFilePath);
                     _cachedSettings = JsonSerializer.Deserialize<AppSettings>(json, _jsonOptions) ?? new AppSettings();
+                    _cachedSettings.Normalize();
                     return _cachedSettings;
                 }
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"Ошибка загрузки настроек: {ex.Message}");
-                    _cachedSettings = new AppSettings();
-                    return _cachedSettings;
+                    return _cachedSettings = new AppSettings();
                 }
             }
         }
@@ -60,9 +59,7 @@ namespace BinBuddy.src.BinBuddy
                 {
                     string directory = Path.GetDirectoryName(SettingsFilePath)!;
                     if (!Directory.Exists(directory))
-                    {
                         Directory.CreateDirectory(directory);
-                    }
 
                     var json = JsonSerializer.Serialize(settings, _jsonOptions);
                     File.WriteAllText(SettingsFilePath, json);
@@ -84,11 +81,7 @@ namespace BinBuddy.src.BinBuddy
             }
         }
 
-        public static void ResetToDefaults()
-        {
-            var defaultSettings = new AppSettings();
-            SaveSettings(defaultSettings);
-        }
+        public static void ResetToDefaults() => SaveSettings(new AppSettings());
     }
 
     public class AppSettings
@@ -101,18 +94,12 @@ namespace BinBuddy.src.BinBuddy
 
         public AppSettings Clone() => new()
         {
-            ShowNotifications = this.ShowNotifications,
-            ShowRecycleBinOnDesktop = this.ShowRecycleBinOnDesktop,
-            AutoStartEnabled = this.AutoStartEnabled,
-            CurrentIconPack = this.CurrentIconPack,
-            UpdateIntervalSeconds = this.UpdateIntervalSeconds
+            ShowNotifications = ShowNotifications,
+            ShowRecycleBinOnDesktop = ShowRecycleBinOnDesktop,
+            AutoStartEnabled = AutoStartEnabled,
+            CurrentIconPack = CurrentIconPack,
+            UpdateIntervalSeconds = UpdateIntervalSeconds
         };
-
-        public bool IsValid()
-        {
-            return UpdateIntervalSeconds is >= 1 and <= 60
-                   && !string.IsNullOrEmpty(CurrentIconPack);
-        }
 
         public void Normalize()
         {
